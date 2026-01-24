@@ -149,15 +149,18 @@ h1{
 }
 
 .popup{
+    
     position:fixed;
-    top:10%;
+    top:50%;
     left:50%;
     transform:translateX(-50%);
+    
     max-width:500px;
     width:100%;
     background:#fff;
     z-index:10;
     border-radius:6px;
+    
 }
 
 .head-popup{
@@ -244,6 +247,23 @@ h1{
 .btn:hover{background:#1f888e;}
 .btn:active{background:#1f4b8e;}
 
+.btnS{
+    height:24px;
+    width:auto;
+    background:#00CB84;
+    box-shadow:0 2px 4px rgba(0,0,0,.25);
+    text-align:center;
+    color:#fff;
+    padding:12px;
+    border-radius:6px;
+    transition:.3s;
+    font-size:18px;
+    cursor:pointer;
+    border:none;
+}
+
+.btnS:hover{background:#1f888e;}
+.btnS:active{background:#1f4b8e;}
 
 
 .alertMsg,

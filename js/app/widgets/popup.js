@@ -5,7 +5,7 @@ export const popup = {
             active: 0,
             top: 0,
             widthVal: '500px',
-            ml: '-250px',
+            mr: '-250px',
             left: '50%',
             height: 'auto'
         };
@@ -23,7 +23,7 @@ export const popup = {
             if (this.fullscreen) {
                 this.top = 0;
                 this.widthVal = '100%';
-                this.ml = '0';
+                this.mr = '0';
                 this.left = '0';
                 this.height = '100%';
             }
@@ -37,7 +37,7 @@ export const popup = {
                 :style="{ 
                     top: top, 
                     maxWidth: widthVal, 
-                    marginLeft: ml, 
+                    marginRight: mr, 
                     left: left, 
                     height: height 
                 }" 
