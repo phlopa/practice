@@ -23,6 +23,7 @@ export const campaign = {
         }
 
         this.get();
+        
         //this.GetFirstAndLastDate();
     },
     methods: {
@@ -52,6 +53,33 @@ export const campaign = {
                 if (self.iChart != -1) self.line(self.data.items[self.iChart]);
             }).catch(function(error) {
                 self.parent.logout();
+            });
+        },
+
+        getCampaignBannersChart:function(){
+            var self=this;
+            var data = self.parent.toFormData(self.parent.formData);
+            
+            if(this.date!="") data.append('date',this.date);
+            if(this.date2!="") data.append('date2',this.date2);
+            if(this.q!="") data.append('q',this.q);
+            if(this.sort!="") data.append('sort',this.sort);
+
+            self.loader=1;
+            axios.post(this.parent.url+"/site/getCampaignBannersChart?auth="+this.parent.user.auth, data).then(function(response){
+
+                self.parent.formData.views=response.data.items.views;
+                self.parent.formData.clicks=response.data.items.clicks;
+                self.parent.formData.line=response.data.items.line;
+                self.parent.formData.sites=response.data.items.sites;
+
+                self.line(response.data.items);
+                
+                self.loader = 0;
+
+            }).catch(function(error){
+                console.log(error);
+                //self.parent.logout();
             });
         },
 
@@ -138,6 +166,7 @@ export const campaign = {
         
 
         line: function(item) {
+            console.log("Item: ",item);
             setTimeout(function() {
                 let dates = [];
                 let clicks = [];
@@ -217,7 +246,7 @@ export const campaign = {
                 }
             }
             this.parent.formData = this.data.items[this.iChart];
-            this.get();
+            this.getCampaignBannersChart();
         },
     },
     template:`
@@ -246,8 +275,8 @@ export const campaign = {
         <popup ref="chart" fullscreen="true" title="Chart">
             <div class="flex panel">
                 <div class="w30 ptb25">
-                    <input type="date" v-model="date" @change="get();" /> – 
-                    <input type="date" v-model="date2" @change="get();" />
+                    <input type="date" v-model="date" @change="getCampaignBannersChart();" /> – 
+                    <input type="date" v-model="date2" @change="getCampaignBannersChart();" />
                 </div>
                 
                 <div class="w70 al">
@@ -275,12 +304,12 @@ export const campaign = {
             <div class="flex body">
                 <div class="w30 ar filchart">
                     <div class="itemchart ptb10" v-if="all">
-                        <toogle :modelValue="all" @update:modelValue="all = $event; checkAll($event)" />
+                        <toogle v-model="all" @update:modelValue="all = $event; checkAll($event)" />
                         All
                     </div>
                     
                     <div class="itemchart ptb10" v-if="data.items[iChart].sites" v-for="s in data.items[iChart].sites">
-                        <toogle :modelValue="s.include" @update:modelValue="s.include = $event; parent.formData = data.items[iChart]; get()" />
+                        <toogle v-model="s.include" @update:modelValue="s.include = $event; parent.formData = data.items[iChart]; getCampaignBannersChart()" />
                         {{s.site}}
                     </div>
                 </div>
@@ -422,7 +451,7 @@ export const campaign = {
                             <a href="#" @click.prevent="parent.formData = item; $refs.ad.active = 1;">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="#" @click.prevent="parent.formData = item; iChart = i; $refs.chart.active = 1; line(item)">
+                            <a href="#" @click.prevent="parent.formData = item; iChart = i; $refs.chart.active = 1; getCampaignBannersChart()">
                                 <i class="fas fa-chart-bar"></i>
                             </a>
                             <a href="#" @click.prevent="parent.formData = item; delAd();">

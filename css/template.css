@@ -267,6 +267,44 @@ h1{
 .cubes .leads  { background-color: #379D00; color: #fff; }
 .cubes .ctr    { background-color: #f8f8f8; color: #333; }
 
+.tabs {
+    position: relative;
+    top: 2px;
+}
+
+.tabs ul {
+   padding: 0;
+   margin: 0; 
+   list-style: none;
+}
+
+.tabs ul li {
+    display: inline-block;
+    transition: .5s;
+    background-color: #fff;
+    border: 1px solid #cbcbcb;
+    border-bottom: 3px solid #cbcbcb;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 0 0 0 10px;
+    padding: 10px;
+    font-weight: bold;
+    color: #686868;
+    cursor: pointer;
+}
+
+.tabs ul li:hover{
+    background-color: #effcf8;
+    border-bottom: 3px solid #81cab1;
+    color: #333;
+}
+
+.tabs ul li.active {
+    background-color: #e2faf2;
+    border-bottom: 3px solid #00CB84;
+    color: #333;
+}
+
 .empty{
     text-align:center;
     padding:30px;
@@ -340,7 +378,7 @@ h1{
 .switch { 
     position: relative; 
     display: inline-block; 
-    width: 30px; height: 15px;
+    min-width: 30px; min-height: 15px;
  } 
  
  .switch input {display:none;} 
@@ -383,28 +421,46 @@ input:checked + .slider:before {
 .slider.round { border-radius: 34px; } 
 .slider.round:before { border-radius: 50%; }
 
-.inner-form input[type=email],
-.inner-form input[type=password]{
-    background:#F6F9FE;
-    height:48px;
-    width:100%;
-    border:1px solid #D4D9DF;
-    border-radius:6px;
-    padding:0 15px;
+
+.inner-form :is(input, select, textarea) {
+    background-color: #F6F9FE;
+    border: 1px solid #D4D9DF;
+    border-radius: 6px;
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+    color: #333;
 }
 
-.inner-form input:focus{
-    border-color:rgba(82,168,236,.8);
-    box-shadow:0 0 8px rgba(82,168,236,.6);
+
+.inner-form :is(input, select) {
+    height: 48px;
 }
 
-.inner-form label{
-    display:block;
-    font-size:16px;
-    font-weight:700;
-    margin-bottom:8px;
-    text-align: right;
+
+.inner-form textarea {
+    height: 148px;
+    padding-top: 10px;
 }
+
+
+.inner-form input:focus, 
+.inner-form textarea:focus, 
+.inner-form select:focus {
+    border-color: #52a8ec;
+    box-shadow: 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: none;
+}
+
+
+.inner-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
 
 
 #user-top{

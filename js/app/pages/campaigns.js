@@ -11,7 +11,8 @@ export const campaigns = {
             loader: 1,
             iChart:-1,
             id:0,
-            type:0
+            type:0,
+            all:true,
         };
     },
     mounted: function () {
@@ -21,7 +22,9 @@ export const campaigns = {
             this.parent.logout();
         }
         this.get();
+        
         this.GetFirstAndLastDate();
+
     },
     methods: {
         GetFirstAndLastDate:function(){
@@ -36,10 +39,10 @@ export const campaigns = {
         get:function(){
             var self=this;
             var data = self.parent.toFormData(self.parent.formData);
-            /*
+            
             if(this.date!="") data.append('date',this.date);
             if(this.date2!="") data.append('date2',this.date2);
-            */
+            
             if(self.iChart!=-1) self.line(self.data.items[self.iChart]);
             self.loader=1;
             axios.post(this.parent.url+"/site/getCampaigns?auth="+this.parent.user.auth, data).then(function(response){
@@ -49,6 +52,32 @@ export const campaigns = {
                 self.parent.logout();
             });
         },
+        getCampaignChart:function(){
+            var self=this;
+            var data = self.parent.toFormData(self.parent.formData);
+            
+            if(this.date!="") data.append('date',this.date);
+            if(this.date2!="") data.append('date2',this.date2);
+            if(this.q!="") data.append('q',this.q);
+            if(this.sort!="") data.append('sort',this.sort);
+
+            self.loader=1;
+            axios.post(this.parent.url+"/site/getCampaignChart?auth="+this.parent.user.auth, data).then(function(response){
+
+                self.parent.formData.views=response.data.items.views;
+                self.parent.formData.clicks=response.data.items.clicks;
+                self.parent.formData.line=response.data.items.line;
+                self.parent.formData.sites=response.data.items.sites;
+
+                self.line(response.data.items);
+                
+                self.loader = 0;
+            }).catch(function(error){
+                console.log(error);
+                self.parent.logout();
+            });
+        },
+        
         action:function(){
             var self=this;
             self.parent.formData.copy="";
@@ -94,8 +123,9 @@ export const campaigns = {
                 let clicks = [];
                 let views = [];
                 let leads = [];
-                if(item&&item['line']){
+                if(item && item['line']){
                     for(let i in item['line']){
+                        console.log("Дані: ", item['line'][i]);
                         dates.push(i);
                         clicks.push(item['line'][i].clicks);
                         views.push(item['line'][i].views);
@@ -122,11 +152,12 @@ export const campaigns = {
                             label.src=image;
 
                             const width = 120;
-                            src.drawImage(label, x.getPixelForValue(index)-(width/2), x.top, width, width);
+                            ctx.drawImage(label, x.getPixelForValue(index)-(width/2), x.top, width, width);
 
                         });
                     }
                 }
+
                 new Chart(ctx, {
                     type:'line',
                     data:{
@@ -179,7 +210,7 @@ export const campaigns = {
                     },
 
                 })
-            },1000);
+            },500);
         },
         checkAll:function(prop){
             if(this.data.items[this.iChart].sites){
@@ -215,7 +246,7 @@ export const campaigns = {
                 <popup ref="chart" fullscreen="true" title="Chart">
                     <div class="flex panel">
                         <div class="w30 ptb25">
-                            <input type="date" v-model="date" @change="get();" /> – <input type="date" v-model="date2" @change="get();" />
+                            <input type="date" v-model="date" @change="getCampaignChart();" /> – <input type="date" v-model="date2" @change="getCampaignChart();" />
                         </div>
 
                         <div class="w70 al">
@@ -251,7 +282,7 @@ export const campaigns = {
                             </div>
                             
                             <div class="itemchart ptb10" v-if="data.items[iChart].sites" v-for="s in data.items[iChart].sites">
-                                <toogle v-model="s.include" @update:modelValue="s.include = $event; parent.formData = data.items[iChart]; get()" />
+                                <toogle v-model="s.include" @update:modelValue="s.include = $event; parent.formData = data.items[iChart]; getCampaignChart()" />
                                 {{s.site}}
                             </div>
                         </div>
@@ -281,6 +312,7 @@ export const campaigns = {
                         </form>
                     </div>
                 </popup>
+
                 <div class="table" v-if="data.items!=''">
                     <table>
                         <thead>
@@ -331,7 +363,7 @@ export const campaigns = {
                                     <router-link :to="'/campaign/'+item.id">
                                         <i class="fas fa-edit"></i>
                                     </router-link>
-                                    <a href="#" @click.prevent="parent.formData = item; iChart=i; $refs.chart.active=1; line(item)">
+                                    <a href="#" @click.prevent="parent.formData = item; iChart=i; $refs.chart.active=1; getCampaignChart(iChart)">
                                         <i class="fas fa-chart-bar"></i>
                                     </a>
                                     <a href="#" @click.prevent="parent.formData = item; del();">
