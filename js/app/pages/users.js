@@ -121,6 +121,8 @@ export const users = {
                             <label>Password</label>
                             <input type="text" v-model="parent.formData.password">
                         </div>
+                        
+                        
 
                         <div class="row">
                             <button class="btn" v-if="parent.formData && parent.formData.id">Edit</button>
