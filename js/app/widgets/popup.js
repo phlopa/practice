@@ -3,14 +3,16 @@ export const popup = {
     data() {
         return {
             active: 0,
+            /*
             top: 0,
             widthVal: '500px',
             ml: '-250px',
             left: '50%',
             height: 'auto'
+            */
         };
     },
-    watch: {
+    /*watch: {
         active: function (o, n) {
             if (o == 1 && !this.fullscreen) {
                 var self = this;
@@ -28,33 +30,35 @@ export const popup = {
                 this.height = '100%';
             }
         }
-    },
-    template:`
-        <template v-if="active == 1">
-            <div class="popup-back"></div>
-            <div 
-                class="popup" 
-                :style="{ 
+    },*/
+    /*:style="{ 
                     top: top, 
                     maxWidth: widthVal, 
                     marginLeft: ml, 
                     left: left, 
                     height: height 
-                }" 
-                ref="popup"
-            >
-                <div class="flex head-popup">
-                    <div class="w80 ptb20">
-                        <div class="head-title">{{ title }}</div>
+                }"*/
+    template:`
+        <template v-if="active == 1">
+            <div class="popup-back" @click.self="active = 0">
+                <div 
+                    class="popup" 
+                    :class="{ 'is-fullscreen': fullscreen }" 
+                    ref="popup"
+                >
+                    <div class="flex head-popup">
+                        <div class="w80 ptb20">
+                            <div class="head-title">{{ title }}</div>
+                        </div>
+                        <div class="w20 ar ptb20">
+                            <a href="#" @click.prevent="active = 0">
+                                <i class="fas fa-window-close"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="w20 al ptb20">
-                        <a href="#" @click.prevent="active = 0">
-                            <i class="fas fa-window-close"></i>
-                        </a>
+                    <div class="popup-inner">
+                        <slot />
                     </div>
-                </div>
-                <div class="popup-inner">
-                    <slot />
                 </div>
             </div>
         </template>

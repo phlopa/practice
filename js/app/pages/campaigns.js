@@ -125,7 +125,6 @@ export const campaigns = {
                 let leads = [];
                 if(item && item['line']){
                     for(let i in item['line']){
-                        console.log("Дані: ", item['line'][i]);
                         dates.push(i);
                         clicks.push(item['line'][i].clicks);
                         views.push(item['line'][i].views);
